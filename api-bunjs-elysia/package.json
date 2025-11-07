@@ -1,0 +1,27 @@
+{
+  "name": "api-bunjs-elysia",
+  "version": "1.0.0",
+  "description": "API Bun.js com Elysia para POC de performance",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "start": "bun run src/index.ts",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "keywords": ["elysia", "typescript", "bun"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elysiajs/cors": "^1.1.1",
+    "@elysiajs/swagger": "^1.1.1",
+    "elysia": "^1.0.20",
+    "pg": "^8.11.3",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/pg": "^8.10.9",
+    "typescript": "^5.3.3"
+  }
+}
+
