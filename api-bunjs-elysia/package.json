@@ -5,23 +5,35 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "start": "bun run src/index.ts",
-    "typecheck": "bunx tsc --noEmit"
+    "start": "bun run src/cluster.ts",
+    "build": "bun build src/index.ts --outdir ./dist --target bun",
+    "build:standalone": "bun build src/index.ts --compile --outfile ./dist/api --target bun",
+    "build:size": "du -sh dist/* 2>/dev/null || echo 'Pasta dist não encontrada'",
+    "build:compare": "cd .. && ./compare-builds.sh",
+    "typecheck": "bunx tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
-  "keywords": ["elysia", "typescript", "bun"],
+  "keywords": [
+    "elysia",
+    "typescript",
+    "bun"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
     "@elysiajs/swagger": "^1.1.1",
+    "drizzle-orm": "^0.44.7",
     "elysia": "^1.0.20",
-    "pg": "^8.11.3",
+    "postgres": "^3.4.7",
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^20.10.5",
-    "@types/pg": "^8.10.9",
+    "@types/node": "^24.10.1",
+    "drizzle-kit": "^0.31.6",
     "typescript": "^5.3.3"
   }
 }
-

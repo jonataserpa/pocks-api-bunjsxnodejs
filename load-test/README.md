@@ -63,3 +63,5 @@ Os testes coletam as seguintes métricas:
 - Os testes podem gerar muitos dados no banco. Considere limpar o banco entre execuções
 - Para resultados mais precisos, execute os testes em um ambiente isolado
 
+TOTAL_REQUESTS=100000 CONCURRENCY=50 
+npm run test:elysia

@@ -1,8 +1,10 @@
-import { FastifyInstance } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
+import { z } from 'zod';
 import { getDb } from '../config/database';
-import { createUserSchema, updateUserSchema, userIdParamSchema } from '../schemas/user.schema';
 import { users } from '../db/schema';
 import { eq, desc } from 'drizzle-orm';
+import { Route, Get, Post, Put, Delete } from '../decorators';
+import { createUserSchema, updateUserSchema, userIdParamSchema } from '../schemas/user.schema';
 
 // Função auxiliar para converter dados do Drizzle para o formato da API
 function formatUser(user: any) {
@@ -16,16 +18,26 @@ function formatUser(user: any) {
   };
 }
 
-export async function userRoutes(fastify: FastifyInstance) {
-  // GET /users - Listar todos os usuários
-  fastify.get('/users', async (request, reply) => {
+@Route('/users')
+export class UserController {
+  @Get('', {
+    summary: 'Listar todos os usuários',
+    tags: ['users'],
+  })
+  async listUsers(request: FastifyRequest, reply: FastifyReply) {
     const db = getDb();
     const result = await db.select().from(users).orderBy(desc(users.createdAt));
     return reply.send({ users: result.map(formatUser) });
-  });
+  }
 
-  // GET /users/:id - Buscar usuário por ID
-  fastify.get('/users/:id', async (request, reply) => {
+  @Get('/:id', {
+    summary: 'Buscar usuário por ID',
+    tags: ['users'],
+    schema: {
+      params: userIdParamSchema,
+    },
+  })
+  async getUserById(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const params = userIdParamSchema.parse(request.params);
     const db = getDb();
     const result = await db.select().from(users).where(eq(users.id, parseInt(params.id))).limit(1);
@@ -35,10 +47,16 @@ export async function userRoutes(fastify: FastifyInstance) {
     }
     
     return reply.send({ user: formatUser(result[0]) });
-  });
+  }
 
-  // POST /users - Criar usuário
-  fastify.post('/users', async (request, reply) => {
+  @Post('', {
+    summary: 'Criar usuário',
+    tags: ['users'],
+    schema: {
+      body: createUserSchema,
+    },
+  })
+  async createUser(request: FastifyRequest<{ Body: z.infer<typeof createUserSchema> }>, reply: FastifyReply) {
     const data = createUserSchema.parse(request.body);
     const db = getDb();
     
@@ -55,10 +73,23 @@ export async function userRoutes(fastify: FastifyInstance) {
       }
       throw error;
     }
-  });
+  }
 
-  // PUT /users/:id - Atualizar usuário
-  fastify.put('/users/:id', async (request, reply) => {
+  @Put('/:id', {
+    summary: 'Atualizar usuário',
+    tags: ['users'],
+    schema: {
+      params: userIdParamSchema,
+      body: updateUserSchema,
+    },
+  })
+  async updateUser(
+    request: FastifyRequest<{ 
+      Params: { id: string };
+      Body: z.infer<typeof updateUserSchema>;
+    }>, 
+    reply: FastifyReply
+  ) {
     const params = userIdParamSchema.parse(request.params);
     const data = updateUserSchema.parse(request.body);
     const db = getDb();
@@ -92,10 +123,16 @@ export async function userRoutes(fastify: FastifyInstance) {
       }
       throw error;
     }
-  });
+  }
 
-  // DELETE /users/:id - Deletar usuário
-  fastify.delete('/users/:id', async (request, reply) => {
+  @Delete('/:id', {
+    summary: 'Deletar usuário',
+    tags: ['users'],
+    schema: {
+      params: userIdParamSchema,
+    },
+  })
+  async deleteUser(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
     const params = userIdParamSchema.parse(request.params);
     const db = getDb();
     const result = await db.delete(users).where(eq(users.id, parseInt(params.id))).returning({ id: users.id });
@@ -105,6 +142,6 @@ export async function userRoutes(fastify: FastifyInstance) {
     }
     
     return reply.code(204).send();
-  });
+  }
 }
 

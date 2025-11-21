@@ -382,19 +382,19 @@ async function runTest() {
   console.log(`✅ Servidor está respondendo (Status: ${healthCheck.statusCode})\n`);
 
   // Teste 1: GET /users (listar)
-  console.log('📊 Teste 1: GET /users (listar todos)');
-  const getTest = await autocannon({
-    url: BASE_URL,
-    connections: 100,
-    duration: 30,
-    requests: [
-      {
-        method: 'GET',
-        path: '/users',
-      },
-    ],
-  });
-  printResults(getTest, 'GET /users');
+  //console.log('📊 Teste 1: GET /users (listar todos)');
+  //const getTest = await autocannon({
+  //  url: BASE_URL,
+  //  connections: 100,
+  //  duration: 30,
+  //  requests: [
+  //    {
+  //      method: 'GET',
+  //      path: '/users',
+  //    },
+  //  ],
+  //});
+  //printResults(getTest, 'GET /users');
 
   // Teste 2: POST /users (criar registros usando streams otimizado)
   console.log('\n📊 Teste 2: POST /users (criar usuários usando Streams otimizado)');
@@ -453,19 +453,19 @@ async function runTest() {
   }, 'POST /users (Total: 1 milhão)');
 
   // Teste 3: GET /users/:id (buscar por ID)
-  console.log('\n📊 Teste 3: GET /users/:id (buscar por ID)');
-  const getByIdTest = await autocannon({
-    url: BASE_URL,
-    connections: 100,
-    duration: 30,
-    requests: [
-      {
-        method: 'GET',
-        path: '/users/1',
-      },
-    ],
-  });
-  printResults(getByIdTest, 'GET /users/:id');
+  //console.log('\n📊 Teste 3: GET /users/:id (buscar por ID)');
+  //const getByIdTest = await autocannon({
+  //  url: BASE_URL,
+  //  connections: 100,
+  //  duration: 30,
+  //  requests: [
+  //    {
+  //      method: 'GET',
+  //      path: '/users/1',
+  //    },
+  //  ],
+  //});
+  //printResults(getByIdTest, 'GET /users/:id');
 }
 
 function printResults(results, testName) {

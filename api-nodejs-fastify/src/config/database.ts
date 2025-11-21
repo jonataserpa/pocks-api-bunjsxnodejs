@@ -1,6 +1,9 @@
+import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import * as schema from '../db/schema';
 
 let pool: Pool | null = null;
+let dbInstance: ReturnType<typeof drizzle> | null = null;
 
 export function getPool(): Pool {
   if (!pool) {
@@ -10,15 +13,24 @@ export function getPool(): Pool {
       database: process.env.DB_NAME || 'pocks_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
+      ssl: false,
     });
   }
   return pool;
 }
 
+export function getDb() {
+  if (!dbInstance) {
+    const pool = getPool();
+    dbInstance = drizzle(pool, { schema });
+  }
+  return dbInstance;
+}
+
 export async function initializeDatabase() {
-  const db = getPool();
+  const pool = getPool();
   
-  await db.query(`
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,

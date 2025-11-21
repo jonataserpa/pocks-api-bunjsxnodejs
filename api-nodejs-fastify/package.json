@@ -6,24 +6,36 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
+    "build:size": "du -sh dist/* 2>/dev/null || echo 'Pasta dist não encontrada'",
+    "build:compare": "cd .. && ./compare-builds.sh",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
-  "keywords": ["fastify", "typescript", "nodejs"],
+  "keywords": [
+    "fastify",
+    "typescript",
+    "nodejs"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^9.0.1",
     "@fastify/env": "^4.2.0",
+    "drizzle-orm": "^0.44.7",
     "fastify": "^4.24.3",
     "pg": "^8.11.3",
+    "reflect-metadata": "^0.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",
     "@types/pg": "^8.10.9",
+    "drizzle-kit": "^0.31.6",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
 }
-
